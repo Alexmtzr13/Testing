@@ -1,0 +1,7 @@
+services:
+  sandbox:
+    build: .
+    volumes:
+      - ./scripts:/app/scripts
+    stdin_open: true
+    tty: true
