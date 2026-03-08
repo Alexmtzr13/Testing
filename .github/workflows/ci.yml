@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker compose build
+
+      - name: Run R scripts
+        run: docker compose run sandbox Rscript scripts/Test.R
+
+      - name: Lint R scripts (non-blocking)
+        continue-on-error: true
+        run: |
+          docker compose run sandbox R -e "
+            if (!requireNamespace('lintr', quietly = TRUE)) install.packages('lintr', repos='https://cloud.r-project.org');
+            results <- lintr::lint_dir('scripts', pattern = '\\\\.R$');
+            print(results)
+          "

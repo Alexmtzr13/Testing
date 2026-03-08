@@ -1,0 +1,10 @@
+.git/
+.github/
+*.pdf
+.Rhistory
+.RData
+__pycache__/
+.venv/
+*.log
+.DS_Store
+README.md
